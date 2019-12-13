@@ -108,7 +108,7 @@ func getServerTime(sessID string) string {
 
 	pathToTimeScript := filepath.Join(baseDir, "storage", sessID, "time.sh")
 
-	cmd := exec.Command("/bin/sh", pathToTimeScript)
+	cmd := exec.Command("/bin/rbash", pathToTimeScript)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("cmd.Run() failed with %s\n", err)

@@ -9,15 +9,19 @@ WORKDIR /app
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
-# Don't give the user a root account
-RUN passwd -l root
-RUN useradd -c 'admin' -m -d /home/admin -s /bin/rbash
-USER admin
-ENV HOME /home/admin
-
 RUN chmod -R -w /app
 
 RUN chmod +w /app/storage
+
+# Give some fun limit for the user :)
+RUN chmod a-x /bin/cat
+RUN chmod a-x /usr/bin/tail
+RUN chmod a-x /usr/bin/head
+RUN chmod a-x /bin/more
+RUN passwd -l root
+RUN useradd admin -m -d /home/admin -s /bin/rbash
+USER admin
+ENV HOME /home/admin
 
 # Expose port 9002 to the outside world
 EXPOSE 9002
