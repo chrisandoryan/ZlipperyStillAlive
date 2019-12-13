@@ -9,6 +9,9 @@ WORKDIR /app
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
+# Put the flag
+RUN mv flagahaha.txt /etc/spartan
+
 RUN chmod -R -w /app
 
 RUN chmod +w /app/storage
