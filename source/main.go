@@ -44,20 +44,20 @@ func extract(rarName string, destDir string) []string {
 
 	if err != nil {
 		fmt.Println(err)
-		return []string{err.Error()}
+		return []string{}
 	}
 
 	rr, err := rardecode.NewReader(theRar, "")
 	if err != nil {
 		fmt.Println(err)
-		return []string{err.Error()}
+		return []string{}
 	}
 	results := []string{}
 	for {
 		header, err := rr.Next()
 		if err != nil {
 			fmt.Println(err)
-			return []string{err.Error()}
+			return results
 		}
 		fmt.Println("headerName", header.Name)
 		fmt.Println("longPath", filepath.Join(destDir, header.Name))
@@ -66,6 +66,7 @@ func extract(rarName string, destDir string) []string {
 		results = append(results, content)
 	}
 	defer theRar.Close()
+	fmt.Println(results, "print result")
 	return results
 }
 
@@ -133,6 +134,7 @@ func showContent(pathToFile string) string {
 		return err.Error()
 	}
 
+	fmt.Println("showContent", string(out))
 	return string(out)
 }
 
