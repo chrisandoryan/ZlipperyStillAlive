@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/go-macaron/renders"
@@ -16,14 +17,14 @@ import (
 	"gopkg.in/macaron.v1"
 )
 
-func writeNewFile(fileName string, rr *rardecode.Reader, headerMode os.FileMode) {
+func writeNewFile(fileName string, rr *rardecode.Reader, headerMode os.FileMode) string {
 	fmt.Println(fileName)
 	newFile, err := os.Create(fileName)
 	defer newFile.Close()
 
 	if err != nil {
 		fmt.Println(err)
-		return
+		return "Error encountered"
 	}
 
 	fmt.Println(reflect.TypeOf(newFile))
@@ -31,36 +32,41 @@ func writeNewFile(fileName string, rr *rardecode.Reader, headerMode os.FileMode)
 	_, err = io.Copy(newFile, rr)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return "Error encountered."
 	}
 
-	// fmt.Println("Whoa.")
-	return
+	fmt.Println("Whoa.")
+	return showContent(fileName)
 }
 
-func extract(rarName string, destDir string) {
+func extract(rarName string, destDir string) []string {
 	theRar, err := os.Open(rarName)
 
 	if err != nil {
 		fmt.Println(err)
-		return
+		return []string{err.Error()}
 	}
 
 	rr, err := rardecode.NewReader(theRar, "")
 	if err != nil {
 		fmt.Println(err)
-		return
+		return []string{err.Error()}
 	}
+	results := []string{}
 	for {
 		header, err := rr.Next()
 		if err != nil {
 			fmt.Println(err)
-			return
+			return []string{err.Error()}
 		}
 		fmt.Println("headerName", header.Name)
-		writeNewFile(filepath.Join(destDir, header.Name), rr, header.Mode())
+		fmt.Println("longPath", filepath.Join(destDir, header.Name))
+		content := writeNewFile(filepath.Join(destDir, header.Name), rr, header.Mode())
+		// fmt.Println("HEHE", result)
+		results = append(results, content)
 	}
 	defer theRar.Close()
+	return results
 }
 
 func putTimeScript(sessPath string) {
@@ -111,7 +117,20 @@ func getServerTime(sessID string) string {
 	cmd := exec.Command("/bin/rbash", pathToTimeScript)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("cmd.Run() failed with %s\n", err)
+		fmt.Println("getServerTime() failed with %s\n", err)
+		return err.Error()
+	}
+
+	return string(out)
+}
+
+func showContent(pathToFile string) string {
+	cmd := exec.Command("/bin/cat", pathToFile)
+	out, err := cmd.CombinedOutput()
+
+	if err != nil {
+		fmt.Println("showContent() failed with %s\n", err.Error())
+		return err.Error()
 	}
 
 	return string(out)
@@ -217,7 +236,9 @@ func main() {
 				return
 			}
 
-			extract(fileLocation, etcDir)
+			results := extract(fileLocation, etcDir)
+			fmt.Println(results)
+			output := strings.Join(results[:], "<br><br>")
 
 			err = os.Remove(fileLocation)
 			if err != nil {
@@ -225,7 +246,7 @@ func main() {
 				return
 			}
 
-			w.Write([]byte("Done! Your archive has been extracted to " + etcDir + " </br><a href=\"/\">Go back</a>"))
+			w.Write([]byte("Done! Your archive has been extracted to " + etcDir + " with content: " + output + "</br><a href=\"/\">Go back</a>"))
 
 		} else if filepath.Ext(handler.Filename) == ".jpg" || filepath.Ext(handler.Filename) == ".png" {
 			fileLocation := filepath.Join(imgDir, filename)
@@ -244,7 +265,7 @@ func main() {
 			w.Write([]byte("Done! Your image has been stored in " + fileLocation + " </br><a href=\"/\">Go back</a>"))
 
 		} else if filepath.Ext(handler.Filename) == ".zip" {
-			w.Write([]byte("Zip is not yet supported!</br><a href=\"/\">Go back</a>"))
+			w.Write([]byte("Zip is not supported anymore!</br><a href=\"/\">Go back</a>"))
 		}
 
 	})

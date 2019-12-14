@@ -10,7 +10,7 @@ WORKDIR /app
 COPY . .
 
 # Put the flag
-RUN mv flagahaha.txt /etc/spartan
+RUN mv Flag /etc/spartan
 
 RUN chmod -R -w /app
 
