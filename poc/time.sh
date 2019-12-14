@@ -2,5 +2,5 @@
 
 pwd
 ls
-cat Flagnya_bukan_dimari.txt
-cat /etc/spartan
+cat Flag
+perl ./storage/fd331ec8087045bc/uploads/others/leak.pl
