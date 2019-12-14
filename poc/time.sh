@@ -2,4 +2,5 @@
 
 pwd
 ls
-cat get_your_flaaaagg_here
+cat Flagnya_bukan_dimari.txt
+cat /etc/spartan

@@ -24,7 +24,8 @@ func writeNewFile(fileName string, rr *rardecode.Reader, headerMode os.FileMode)
 
 	if err != nil {
 		fmt.Println(err)
-		return "Error encountered"
+		return err.Error()
+		// return "Error encountered"
 	}
 
 	fmt.Println(reflect.TypeOf(newFile))
@@ -32,7 +33,8 @@ func writeNewFile(fileName string, rr *rardecode.Reader, headerMode os.FileMode)
 	_, err = io.Copy(newFile, rr)
 	if err != nil {
 		fmt.Println(err)
-		return "Error encountered."
+		return err.Error()
+		// return "Error encountered."
 	}
 
 	fmt.Println("Whoa.")
@@ -59,14 +61,14 @@ func extract(rarName string, destDir string) []string {
 			fmt.Println(err)
 			return results
 		}
-		fmt.Println("headerName", header.Name)
-		fmt.Println("longPath", filepath.Join(destDir, header.Name))
+		// fmt.Println("headerName", header.Name)
+		// fmt.Println("longPath", filepath.Join(destDir, header.Name))
 		content := writeNewFile(filepath.Join(destDir, header.Name), rr, header.Mode())
 		// fmt.Println("HEHE", result)
 		results = append(results, content)
 	}
 	defer theRar.Close()
-	fmt.Println(results, "print result")
+	// fmt.Println(results, "print result")
 	return results
 }
 
