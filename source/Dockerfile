@@ -6,11 +6,13 @@ FROM golang:latest
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
+# Put the flag.
+COPY Flag /etc/spartan
+
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
-# Put the flag
-RUN mv Flag /etc/spartan
+# RUN mv Flag /etc/spartan
 
 RUN chmod -R -w /app
 
@@ -21,6 +23,7 @@ RUN chmod a-x /bin/cat
 RUN chmod a-x /usr/bin/tail
 RUN chmod a-x /usr/bin/head
 RUN chmod a-x /bin/more
+RUN chmod a-x /usr/bin/python
 RUN passwd -l root
 RUN useradd admin -m -d /home/admin -s /bin/rbash
 USER admin
